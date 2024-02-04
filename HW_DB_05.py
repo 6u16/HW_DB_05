@@ -87,7 +87,7 @@ s_BD_lclhst = '5432'
 s_BD_name = 'HW_DB_05'
     
 DSN = f'{s_BD}://{s_BD_lgn}:{s_BD_psswrd}@localhost:{s_BD_lclhst}/{s_BD_name}'
-engine = sqlalchemy.create_engine(DSN) # create_engine() - движок для подключения к базе данных, принимает на вход DSN URL
+engine = sqlalchemy.create_engine(DSN) # create_engine() - Движок для подключения к базе данных, принимает на вход DSN URL
 create_tables(engine) # Вызываем функцию создания таблиц
 
 Session = sessionmaker(bind=engine) # sessionmaker - объект принимает на вход движок и создаёт сессию
@@ -95,7 +95,8 @@ session = Session()
 
 
 # Заполнение таблицы с помощью создания моделей
-file_path = os.path.join(os.getcwd(), 'HW_All/DB/HW_DB_05/tests_data.json')  ## строительство путик нашему файлу
+# file_path = os.path.join(os.getcwd(), 'tests_data.json')  # Строительство пути(HW_DB_05) выбрать проверяющему
+file_path = os.path.join(os.getcwd(), 'HW_All/DB/HW_DB_05/tests_data.json')  # Строительство пути(PythonApplication1)
 with open(file_path, 'r') as fd:
     data = json.load(fd)
 
@@ -175,16 +176,19 @@ session.commit()
 #     for a in subq_04:
 #         print(a.price, a.date_sale)
 
-def Z_P(pub_name = input('Введите имя издателя для просмотра продаж\n') ):
-    print()
-    subq_03 = session.query(Sale).join(Stock.Sales).join(Book).join(Publisher).filter(Publisher.name.like(pub_name))
-    for b in subq_03.all():
-        #print(b.stock.Sales)  # Такой способ вернуться по ссылкам в нужные таблицы
-        #print(b.stock.book)
-        #print(b.stock.shop)
-        #print(b.price, b.date_sale)
-        #print(b.stock.book.title)
-        
-        print('{0:40} | {1:10} | {2:5} | {3:}'.format(b.stock.book.title, b.stock.shop.name, b.price, b.date_sale))
+if __name__ == "__main__":
+    print(__name__)  
+    def select(pub_name = input('Введите имя издателя для просмотра продаж\n') ):
+        print()
+        subq_03 = session.query(Sale).join(Stock.Sales).join(Book).join(Publisher).filter(Publisher.name.like(pub_name))
+        print('{0:40} | {1:10} | {2:5} | {3:}'.format('Название:', 'Магазин:', 'Цена:', 'Продажа:'))
+        for b in subq_03.all():
+            #print(b.stock.Sales)  # Такой способ вернуться по ссылкам в нужные таблицы
+            #print(b.stock.book)
+            #print(b.stock.shop)
+            #print(b.price, b.date_sale)
+            #print(b.stock.book.title)
+            
+            print('{0:40} | {1:10} | {2:5} | {3:}'.format(b.stock.book.title, b.stock.shop.name, b.price, b.date_sale))
     
-Z_P()
+    select()
